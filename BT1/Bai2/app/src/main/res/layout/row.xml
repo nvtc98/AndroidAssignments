@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/thump"
+        app:layout_constraintLeft_toLeftOf="parent" />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        app:layout_constraintLeft_toRightOf="@id/thump"
+        app:layout_constraintRight_toLeftOf="@+id/divider"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="text day ne"
+        android:singleLine="false"
+        android:padding="5dp"
+        android:id="@+id/title"
+        android:textColor="#333"
+        android:textSize="20sp"/>
+    <View
+        android:id="@+id/divider"
+        android:layout_width="1dp"
+        android:background="@color/border"
+        app:layout_constraintRight_toLeftOf="@+id/img"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="100dp">
+    </View>
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="100dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/img"
+        android:layout_alignParentRight="true"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity"
+        android:orientation="vertical" >
+
+        <!--    Header-->
+        <ImageView
+            android:id="@+id/flag"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:contentDescription="@string/test"
+            android:src="@drawable/taco"
+            android:scaleType="centerCrop"
+            />
+
+        <!--    Content-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginRight="40dp" >
+
+            <!--        Size & Tortilla-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal" >
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" >
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:paddingVertical="10dp"
+                        android:gravity="center"
+                        android:id="@+id/txt_size"
+                        android:background="@drawable/border"
+                        android:text="@string/size"
+                        android:textSize="8pt" />
+                    <RadioGroup
+                        android:id="@+id/radiogroup_size"
+                        android:layout_below="@id/txt_size"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp">
+                        <RadioButton
+                            android:id="@+id/radio_large"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:text="Large" />
+                        <RadioButton
+                            android:id="@+id/radio_medium"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Medium" />
+                    </RadioGroup>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_margin="5dp"
+                        android:paddingVertical="10dp"
+                        android:background="@drawable/border"
+                        android:id="@+id/txt_tortilla"
+                        android:text="@string/tortilla"
+                        android:textSize="8pt" />
+                    <RadioGroup
+                        android:id="@+id/radiogroup_tortilla"
+                        android:layout_below="@id/txt_tortilla"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp">
+                        <RadioButton
+                            android:id="@+id/radio_corn"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:text="Corn" />
+                        <RadioButton
+                            android:id="@+id/radio_flour"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Flour" />
+                    </RadioGroup>
+                </RelativeLayout>
+            </LinearLayout>
+
+            <!--        Fillings-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:paddingVertical="10dp"
+                android:gravity="center"
+                android:background="@drawable/border"
+                android:text="@string/fillings"
+                android:textSize="8pt"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal" >
+                <LinearLayout
+                    android:id="@+id/chb_fillings_left"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingHorizontal="16dp"
+                    android:orientation="vertical" >
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/chb_fillings_right"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginTop="10dp"
+                    android:paddingHorizontal="16dp"
+                    android:orientation="vertical" >
+                </LinearLayout>
+            </LinearLayout>
+
+            <!--        Beverage-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:paddingVertical="10dp"
+                android:gravity="center"
+                android:background="@drawable/border"
+                android:text="@string/beverage"
+                android:textSize="8pt"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal" >
+                <LinearLayout
+                    android:id="@+id/chb_b_l"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingHorizontal="16dp"
+                    android:orientation="vertical" >
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/chb_b_r"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginTop="10dp"
+                    android:paddingHorizontal="16dp"
+                    android:orientation="vertical" >
+                </LinearLayout>
+            </LinearLayout>
+
+            <!--        Place your order-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+                <Button
+                    android:id="@+id/btn_submit"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:paddingHorizontal="40dp"
+                    android:paddingVertical="20dp"
+                    android:textAllCaps="false"
+                    android:textSize="18dp"
+                    android:textColor="#FFF"
+                    android:background="@color/actionColor"
+                    android:text="Place Your Order" />
+            </RelativeLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

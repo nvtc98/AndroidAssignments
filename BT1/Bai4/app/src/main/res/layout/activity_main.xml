@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Conversion:"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textSize="20dp"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RadioGroup
+        android:id="@+id/radiogroup_choose"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/equals"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RadioButton
+            android:id="@+id/radio_ftoc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:layout_weight="1"
+            android:text="Fahrenheit-to-Celsius" />
+
+        <RadioButton
+            android:id="@+id/radio_ctof"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Celsius-to-Fahrenheit" />
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/input"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/radiogroup_choose"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/equals"
+        android:textSize="17dp"
+        android:maxLength="6"
+        android:inputType="numberDecimal|numberSigned"/>
+
+    <TextView
+        android:id="@+id/equals"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="="
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textSize="17dp"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toBottomOf="@+id/radiogroup_choose"
+        app:layout_constraintBottom_toTopOf="@id/btn_submit"/>
+
+    <TextView
+        android:id="@+id/output"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/radiogroup_choose"
+        app:layout_constraintLeft_toRightOf="@+id/equals"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textSize="17dp"/>
+
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="30dp"
+        android:paddingHorizontal="30dp"
+        android:paddingVertical="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/equals"
+        app:layout_constraintBottom_toTopOf="@+id/history"
+        android:textSize="18dp"
+        android:background="@android:color/darker_gray"
+        android:text="Convert" />
+
+    <ListView
+        android:id="@+id/history"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintVertical_weight="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_submit">
+    </ListView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

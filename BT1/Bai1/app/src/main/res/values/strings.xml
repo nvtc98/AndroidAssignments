@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Bai1</string>
+    <string name="test">test</string>
+    <string name="size">Size</string>
+    <string name="tortilla">Tortilla</string>
+    <string name="fillings">Fillings</string>
+    <string name="beverage">Beverage</string>
+    <string name="large">Large</string>
+    <string name="corn">Corn</string>
+    <string name="medium">Medium</string>
+    <string name="flour">Flour</string>
+</resources>
