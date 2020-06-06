@@ -3,11 +3,14 @@ package com.example.nationinfo;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +21,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.net.MalformedURLException;
@@ -37,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         this.Geoname = new ArrayList<>();
         this.list = new GEONAME_LIST();
-        lvGeoname = (ListView) findViewById(R.id.lvGeoname);
+        this.lvGeoname = (ListView) findViewById(R.id.lvGeoname);
         new ReadJSON().execute("http://api.geonames.org/" +
                 "countryInfoJSON?formatted=true&username=hauvu&style=full&" +
                 "fbclid=IwAR2of8PmJPpcOhvDQLTIwY2PQpRBn7NlVBoOPbKWVxrUJw4e0CMvlx8eHG4");
@@ -47,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String name = Geoname.get(position);
                 for (int i = 0; i < list.getLength(); i++){
-                    if (name.equals(list.get(i).getCountryName())) {
+                    if (name.equals(list.get(i).getCountryName())){
                         //làm thêm trang hiện thị thông tin
                         Intent intent = new Intent(MainActivity.this, Information.class);
                         intent.putExtra("geoname", list.get(i));
@@ -59,36 +63,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
-
     private class ReadJSON extends AsyncTask<String, Void, String>
     {
         @Override
         protected String doInBackground(String... strings) {
             StringBuilder content = new StringBuilder();
-            try
-            {
+            try {
                 URL url = new URL(strings[0]);
                 InputStreamReader inputStreamReader = new InputStreamReader(url.openConnection().getInputStream());
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
                 String line = "";
-                while ((line = bufferedReader.readLine()) != null)
-                {
+                while ((line = bufferedReader.readLine()) != null) {
                     content.append(line);
                 }
 
                 bufferedReader.close();
-            }
-            catch (MalformedURLException e)
-            {
+            } catch (MalformedURLException e) {
                 Toast.makeText(MainActivity.this, "Error 01", Toast.LENGTH_SHORT).show();
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 Toast.makeText(MainActivity.this, "Error 02", Toast.LENGTH_SHORT).show();
             }
 
@@ -101,8 +94,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 JSONObject object = new JSONObject(s);
                 JSONArray array = object.getJSONArray("geonames");
-                for (int i = 0; i < array.length(); i++)
-                {
+                for (int i = 0; i < array.length(); i++) {
                     JSONObject item = array.getJSONObject(i);
                     GEONAME geoname = new GEONAME(
                             item.getString("continent"),
@@ -133,6 +125,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+
+
+
+
 }
 
 //Toast.makeText(this, "Không thể kết nối Internet", Toast.LENGTH_SHORT).show();
