@@ -28,7 +28,7 @@ public class ActivityWebview extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             String url = extras.getString("URL");
-            Toast.makeText(getApplicationContext(), url, Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(), url, Toast.LENGTH_LONG).show();
             webView = findViewById(R.id.wv);
             spinner = (ProgressBar)findViewById(R.id.progressBar);
             webView.setWebViewClient(new CustomWebViewClient());
