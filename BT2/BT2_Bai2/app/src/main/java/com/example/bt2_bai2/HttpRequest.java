@@ -14,14 +14,20 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 public class HttpRequest {
     public static final String TAG = "HttpRequestError";
@@ -32,6 +38,10 @@ public class HttpRequest {
     static String sendRequest(Context context, final MainActivity mainActivity){
         RequestQueue queue = Volley.newRequestQueue(context.getApplicationContext());
         c=context;
+//        mainActivity.setContentView(R.layout.activity_main);
+//        mainActivity.initSpinner();
+//        RssParser rssParser = new RssParser(url, mainActivity);
+//        rssParser.execute((Void) null);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -39,11 +49,19 @@ public class HttpRequest {
                         response =res;
 //                        Toast.makeText(c.getApplicationContext(),res,Toast.LENGTH_LONG).show();
                         mainActivity.setContentView(R.layout.activity_main);
+                        mainActivity.initSpinner();
+                        Document doc = convertStringToXMLDocument(response);
+                        Toast.makeText(c.getApplicationContext(),doc.getFirstChild().getNodeName(),Toast.LENGTH_LONG).show();
+
+//                        RssParser rssParser = new RssParser(url, mainActivity);
+//                        rssParser.execute((Void) null);
+
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 response= String.valueOf(error);
+                Toast.makeText(mainActivity,"fail: "+response,Toast.LENGTH_LONG).show();
                 mainActivity.setLoadingFailed();
             }
         });
@@ -53,89 +71,40 @@ public class HttpRequest {
         return response;
     }
 
-//    static void get(){
-//        try {
+    static void get(){
+        try {
 //            URL url = new URL(HttpRequest.url);
 //            InputStream inputStream = url.openConnection().getInputStream();
+            InputStream input = new URL(url).openStream();
 //            mFeedModelList = parseFeed(inputStream);
-//        }
-//        catch (IOException e) {
-//            Log.e(TAG, "Error", e);
+        }
+        catch (IOException e) {
+            Log.e(TAG, "Erroraaa", e);
 //        } catch (XmlPullParserException e) {
-//            Log.e(TAG, "Error", e);
-//        }
-//    }
+//            Log.e(TAG, "Erroraaa", e);
+        }
+    }
 
-//    static List<RssFeedModel> parseFeed(InputStream inputStream) throws XmlPullParserException, IOException {
-//        String title = null;
-//        String link = null;
-//        String description = null;
-//        boolean isItem = false;
-//        List<RssFeedModel> items = new ArrayList<>();
-//
-//        try {
-//            XmlPullParser xmlPullParser = Xml.newPullParser();
-//            xmlPullParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-//            xmlPullParser.setInput(inputStream, null);
-//
-//            xmlPullParser.nextTag();
-//            while (xmlPullParser.next() != XmlPullParser.END_DOCUMENT) {
-//                int eventType = xmlPullParser.getEventType();
-//
-//                String name = xmlPullParser.getName();
-//                if(name == null)
-//                    continue;
-//
-//                if(eventType == XmlPullParser.END_TAG) {
-//                    if(name.equalsIgnoreCase("item")) {
-//                        isItem = false;
-//                    }
-//                    continue;
-//                }
-//
-//                if (eventType == XmlPullParser.START_TAG) {
-//                    if(name.equalsIgnoreCase("item")) {
-//                        isItem = true;
-//                        continue;
-//                    }
-//                }
-//
-//                Log.d("MyXmlParser", "Parsing name ==> " + name);
-//                String result = "";
-//                if (xmlPullParser.next() == XmlPullParser.TEXT) {
-//                    result = xmlPullParser.getText();
-//                    xmlPullParser.nextTag();
-//                }
-//
-//                if (name.equalsIgnoreCase("title")) {
-//                    title = result;
-//                } else if (name.equalsIgnoreCase("link")) {
-//                    link = result;
-//                } else if (name.equalsIgnoreCase("description")) {
-//                    description = result;
-//                }
-//
-//                if (title != null && link != null && description != null) {
-//                    if(isItem) {
-//                        RssFeedModel item = new RssFeedModel(title, link, description);
-//                        items.add(item);
-//                    }
-//                    else {
-//                        mFeedTitle = title;
-//                        mFeedLink = link;
-//                        mFeedDescription = description;
-//                    }
-//
-//                    title = null;
-//                    link = null;
-//                    description = null;
-//                    isItem = false;
-//                }
-//            }
-//
-//            return items;
-//        } finally {
-//            inputStream.close();
-//        }
-//    }
+    private static Document convertStringToXMLDocument(String xmlString)
+    {
+        //Parser that produces DOM object trees from XML content
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+        //API to obtain DOM Document instance
+        DocumentBuilder builder = null;
+        try
+        {
+            //Create DocumentBuilder with default configuration
+            builder = factory.newDocumentBuilder();
+
+            //Parse the content to Document object
+            Document doc = builder.parse(new InputSource(new StringReader(xmlString)));
+            return doc;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
