@@ -46,20 +46,23 @@ public class MainActivity extends AppCompatActivity {
                 "countryInfoJSON?formatted=true&username=hauvu&style=full&" +
                 "fbclid=IwAR2of8PmJPpcOhvDQLTIwY2PQpRBn7NlVBoOPbKWVxrUJw4e0CMvlx8eHG4");
 
-        this.lvGeoname.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String name = Geoname.get(position);
-                for (int i = 0; i < list.getLength(); i++){
-                    if (name.equals(list.get(i).getCountryName())){
-                        //làm thêm trang hiện thị thông tin
-                        Intent intent = new Intent(MainActivity.this, Information.class);
-                        intent.putExtra("geoname", list.get(i));
-                        startActivity(intent);
+        try {
+            this.lvGeoname.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    String name = Geoname.get(position);
+                    for (int i = 0; i < list.getLength(); i++){
+                        if (name.equals(list.get(i).getCountryName())){
+                            Intent intent = new Intent(MainActivity.this, Information.class);
+                            intent.putExtra("geoname", list.get(i));
+                            startActivity(intent);
+                        }
                     }
                 }
-            }
-        });
+            });
+        } catch (Exception e) {
+            Toast.makeText(this, "no internet", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
