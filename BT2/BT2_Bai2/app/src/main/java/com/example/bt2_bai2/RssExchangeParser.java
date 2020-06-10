@@ -24,7 +24,7 @@ public class RssExchangeParser extends RssParser {
         }
         else
         {
-            mainActivity.setLoadingFailed();
+            mainActivity.showNetworkError();
         }
     }
 

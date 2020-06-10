@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.math.BigDecimal;
 
@@ -84,8 +85,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         String exchangeLink = currencies[indexFrom].getLink() + currencies[indexTo].getISO().toLowerCase() + ".xml";
-//        Toast.makeText(this, exchangeLink, Toast.LENGTH_LONG).show();
-
         RssExchangeParser rssParser = new RssExchangeParser(exchangeLink, this);
         rssParser.execute((Void) null);
     }
@@ -94,11 +93,21 @@ public class MainActivity extends AppCompatActivity {
         this.currencies = currencies;
     }
 
+    void showNetworkError(){
+        Toast.makeText(this, "Network error. Please try again later.", Toast.LENGTH_LONG).show();
+    }
+
     public void showResult(BigDecimal exRate) {
-        EditText et = findViewById(R.id.input);
-        TextView txtResult = findViewById(R.id.txt_result);
-        BigDecimal input = new BigDecimal(et.getText().toString());
-        txtResult.setText(exRate.toString());
-        txtResult.setText(input.multiply(exRate) +" "+ currencies[indexTo].getISO());
+        try {
+            EditText et = findViewById(R.id.input);
+            TextView txtResult = findViewById(R.id.txt_result);
+            BigDecimal input = new BigDecimal(et.getText().toString());
+            txtResult.setText(exRate.toString());
+            txtResult.setText(input.multiply(exRate) + " " + currencies[indexTo].getISO());
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(this, "Cannot exchange. Make sure you you enter a valid input.", Toast.LENGTH_LONG).show();
+        }
     }
 }
