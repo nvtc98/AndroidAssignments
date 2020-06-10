@@ -1,6 +1,5 @@
 package com.example.bt2_bai2;
 
-import android.util.Xml;
 import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -8,11 +7,12 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RssCurrenciesParser extends RssParser {
-    public RssCurrenciesParser(String url, MainActivity mainActivity) {
+public class RssExchangeParser extends RssParser {
+    public RssExchangeParser(String url, MainActivity mainActivity) {
         super(url, mainActivity);
     }
 
@@ -20,15 +20,7 @@ public class RssCurrenciesParser extends RssParser {
     protected void onPostExecute(Boolean success) {
         if(success)
         {
-            Currency [] currencies = (Currency []) payload;
-            String [] titles= new String[currencies.length];
-            for(int i=0;i<currencies.length;++i)
-            {
-                titles[i]=currencies[i].getTitle();
-            }
-            mainActivity.setLoadingSuccess();
-            mainActivity.initSpinners(titles);
-            mainActivity.setCurrencies(currencies);
+            mainActivity.showResult((BigDecimal) payload);
         }
         else
         {
@@ -39,8 +31,6 @@ public class RssCurrenciesParser extends RssParser {
     @Override
     public Object parseFeed(InputStream inputStream) throws XmlPullParserException, IOException
     {
-        List<Currency> currencies = new ArrayList<Currency>();
-
         try {
             XmlPullParser xmlPullParser = super.initXmlPullParser(inputStream);
             String name="";
@@ -55,34 +45,22 @@ public class RssCurrenciesParser extends RssParser {
                         if(name.equalsIgnoreCase("item"))
                         {
                             isReadingItem=true;
-                            c = new Currency();
                             break;
                         }
                         if(isReadingItem)
                         {
-                            if(name.equalsIgnoreCase("title"))
+                            if(name.equalsIgnoreCase("description"))
                             {
-                                c.setTitle(parseCurrency(xmlPullParser.nextText()));
-                                break;
+                                String desc = xmlPullParser.nextText();
+                                return parse(desc);
                             }
-                            if(name.equalsIgnoreCase("link"))
-                            {
-                                c.setLink(xmlPullParser.nextText());
-                                break;
-                            }
-                        }
-                        break;
-                    case XmlPullParser.END_TAG:
-                        if(name.equalsIgnoreCase("item"))
-                        {
-                            currencies.add(c);
-                            isReadingItem=false;
                         }
                         break;
                 }
                 event = xmlPullParser.next();
             }
-            return currencies.toArray(new Currency[currencies.size()]);
+            return null;
+//            return new Object();
         }
         catch (Exception e){
             return null;
@@ -91,9 +69,10 @@ public class RssCurrenciesParser extends RssParser {
         }
     }
 
-    String parseCurrency(String input){
-        String [] frags = input.split("/");
-        return frags[1];
+    BigDecimal parse(String desc){
+//        String s = desc.substring(desc.indexOf("\n"),desc.indexOf("<br/>")).trim();
+        String [] frags = desc.split(" ");
+        BigDecimal result = new BigDecimal(frags[11]);
+        return result;
     }
-
 }

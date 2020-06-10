@@ -31,7 +31,7 @@
             <EditText
                 android:id="@+id/input"
                 android:textSize="17dp"
-                android:maxLength="12"
+                android:maxLength="15"
                 android:width="100dp"
                 android:inputType="numberDecimal"/>
             <Spinner

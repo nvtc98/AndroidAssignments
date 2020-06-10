@@ -32,6 +32,8 @@ public class RssParser extends AsyncTask<Void, Void, Boolean> {
             URL url = new URL(this.url);
             InputStream inputStream = url.openConnection().getInputStream();
             payload = parseFeed(inputStream);
+            if(payload==null)
+                return false;
             return true;
         } catch (IOException e) {
             Log.e(TAG, "Error", e);
