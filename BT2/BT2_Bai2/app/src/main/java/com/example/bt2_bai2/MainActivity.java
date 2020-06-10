@@ -12,22 +12,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+    final private String url = "https://aud.fxexchangerate.com/rss.xml";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_loading);
+        initLoadingScreen();
         fetch();
+    }
 
+    void initLoadingScreen(){
+        setContentView(R.layout.activity_main_loading);
         final Button button = findViewById(R.id.btn_retry);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 fetch();
             }
         });
-//        String s= HttpRequest.sendRequest(this,this);
-//        Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
-//        setContentView(R.layout.activity_main_loading);
     }
 
     void setLoadingFailed(){
@@ -43,25 +44,20 @@ public class MainActivity extends AppCompatActivity {
         txtLoading.setText("Loading...");
         ProgressBar progressBar = findViewById(R.id.pb_loading);
         progressBar.setVisibility(View.VISIBLE);
-        HttpRequest.sendRequest(this,this);
-//        HttpRequest.get();
+        RssCurrenciesParser rssParser = new RssCurrenciesParser(url, this);
+        rssParser.execute((Void) null);
     }
 
-    void initSpinner(){
-        String arr[]={
-                "Hàng điện tử",
-                "Hàng hóa chất",
-                "Hàng gia dụng"};
-        Spinner spinner = findViewById(R.id.spn_from);
-        ArrayAdapter<String> adapter=new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arr);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+    void setLoadingSuccess(){
+        setContentView(R.layout.activity_main);
     }
 
-    void initSpinner(String[] arr){
-        Spinner spinner = findViewById(R.id.spn_from);
+    void initSpinners(String[] arr){
+        Spinner spinnerFrom = findViewById(R.id.spn_from);
+        Spinner spinnerTo = findViewById(R.id.spn_to);
         ArrayAdapter<String> adapter=new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arr);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+        spinnerFrom.setAdapter(adapter);
+        spinnerTo.setAdapter(adapter);
     }
 }

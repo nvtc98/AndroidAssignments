@@ -48,7 +48,7 @@ public class HttpRequest {
                         response =res;
 //                        Toast.makeText(c.getApplicationContext(),res,Toast.LENGTH_LONG).show();
                         mainActivity.setContentView(R.layout.activity_main);
-                        mainActivity.initSpinner();
+//                        mainActivity.initSpinner();
 
 //                        Document doc = convertStringToXMLDocument(response);
 //                        Toast.makeText(c.getApplicationContext(),doc.getFirstChild().getNodeName(),Toast.LENGTH_LONG).show();

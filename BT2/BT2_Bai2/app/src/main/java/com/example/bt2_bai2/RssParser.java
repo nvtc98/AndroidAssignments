@@ -11,24 +11,17 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 public class RssParser extends AsyncTask<Void, Void, Boolean> {
-
-    private String url;
-    private MainActivity mainActivity;
-    public static final String TAG = "HttpRequestError";
-    String [] currencies=new String[0];
+    protected String url;
+    protected MainActivity mainActivity;
+    protected static final String TAG = "HttpRequestError";
+    protected Object payload;
 
     public RssParser(String url, MainActivity mainActivity) {
         this.url = url;
         this.mainActivity = mainActivity;
     }
-
-//    @Override
-//    protected void onPreExecute() {
-//    }
 
     @Override
     protected Boolean doInBackground(Void... voids) {
@@ -38,7 +31,7 @@ public class RssParser extends AsyncTask<Void, Void, Boolean> {
 
             URL url = new URL(this.url);
             InputStream inputStream = url.openConnection().getInputStream();
-            currencies = parseFeed(inputStream);
+            payload = parseFeed(inputStream);
             return true;
         } catch (IOException e) {
             Log.e(TAG, "Error", e);
@@ -52,7 +45,9 @@ public class RssParser extends AsyncTask<Void, Void, Boolean> {
     protected void onPostExecute(Boolean success) {
         if(success)
         {
-            mainActivity.initSpinner(currencies);
+            Toast.makeText(mainActivity,
+                    "Success",
+                    Toast.LENGTH_LONG).show();
         }
         else
         {
@@ -62,39 +57,16 @@ public class RssParser extends AsyncTask<Void, Void, Boolean> {
         }
     }
 
-    public String[] parseFeed(InputStream inputStream) throws XmlPullParserException, IOException
+    public Object parseFeed(InputStream inputStream) throws XmlPullParserException, IOException
     {
-        List<String> currencies = new ArrayList<String>();
+        return null;
+    }
 
-        try {
-            XmlPullParser xmlPullParser = Xml.newPullParser();
-            xmlPullParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-            xmlPullParser.setInput(inputStream, null);
-
-            String name="";
-            int event = xmlPullParser.getEventType();
-            while (event != XmlPullParser.END_DOCUMENT) {
-                if(xmlPullParser.getName()!=null)
-                    name = xmlPullParser.getName();
-
-                switch (event) {
-                    case XmlPullParser.TEXT:
-                        String text = xmlPullParser.getText();
-                        currencies.add(text+" @ "+(name==null?"":name));
-                        break;
-                    case XmlPullParser.START_TAG:
-                        if(name.equalsIgnoreCase("description"))
-                        {
-//                            currencies.add(xmlPullParser.nextText());
-                        }
-                        break;
-                }
-                event = xmlPullParser.next();
-            }
-        } finally {
-            inputStream.close();
-            return currencies.toArray(new String[currencies.size()]);
-        }
+    protected XmlPullParser initXmlPullParser(InputStream inputStream) throws XmlPullParserException {
+        XmlPullParser xmlPullParser = Xml.newPullParser();
+        xmlPullParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+        xmlPullParser.setInput(inputStream, null);
+        return xmlPullParser;
     }
 
 }
