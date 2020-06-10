@@ -60,27 +60,10 @@ public class RssParser extends AsyncTask<Void, Void, Boolean> {
                     "Enter a valid Rss feed url",
                     Toast.LENGTH_LONG).show();
         }
-//        mSwipeLayout.setRefreshing(false);
-//
-//        if (success) {
-//            mFeedTitleTextView.setText("Feed Title: " + mFeedTitle);
-//            mFeedDescriptionTextView.setText("Feed Description: " + mFeedDescription);
-//            mFeedLinkTextView.setText("Feed Link: " + mFeedLink);
-//            // Fill RecyclerView
-//            mRecyclerView.setAdapter(new RssFeedListAdapter(mFeedModelList));
-//        } else {
-//            Toast.makeText(MainActivity.this,
-//                    "Enter a valid Rss feed url",
-//                    Toast.LENGTH_LONG).show();
-//        }
     }
 
     public String[] parseFeed(InputStream inputStream) throws XmlPullParserException, IOException
     {
-        String title = null;
-        String link = null;
-        String description = null;
-        boolean isItem = false;
         List<String> currencies = new ArrayList<String>();
 
         try {
@@ -88,66 +71,29 @@ public class RssParser extends AsyncTask<Void, Void, Boolean> {
             xmlPullParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             xmlPullParser.setInput(inputStream, null);
 
-            xmlPullParser.nextTag();
-            while (xmlPullParser.next() != XmlPullParser.END_DOCUMENT) {
-                int eventType = xmlPullParser.getEventType();
+            String name="";
+            int event = xmlPullParser.getEventType();
+            while (event != XmlPullParser.END_DOCUMENT) {
+                if(xmlPullParser.getName()!=null)
+                    name = xmlPullParser.getName();
 
-                String name = xmlPullParser.getName();
-                currencies.add(name);
-                if(name == null)
-                    continue;
-
-                if(eventType == XmlPullParser.END_TAG) {
-                    if(name.equalsIgnoreCase("item")) {
-                        isItem = false;
-                    }
-                    continue;
+                switch (event) {
+                    case XmlPullParser.TEXT:
+                        String text = xmlPullParser.getText();
+                        currencies.add(text+" @ "+(name==null?"":name));
+                        break;
+                    case XmlPullParser.START_TAG:
+                        if(name.equalsIgnoreCase("description"))
+                        {
+//                            currencies.add(xmlPullParser.nextText());
+                        }
+                        break;
                 }
-
-                if (eventType == XmlPullParser.START_TAG) {
-                    if(name.equalsIgnoreCase("item")) {
-                        isItem = true;
-                        continue;
-                    }
-                }
-
-                Log.d("MyXmlParser", "Parsing name ==> " + name);
-                String result = "";
-                if (xmlPullParser.next() == XmlPullParser.TEXT) {
-                    result = xmlPullParser.getText();
-                    xmlPullParser.nextTag();
-                }
-
-                if (name.equalsIgnoreCase("title")) {
-                    title = result;
-                } else if (name.equalsIgnoreCase("link")) {
-                    link = result;
-                } else if (name.equalsIgnoreCase("description")) {
-                    description = result;
-                }
-
-//                if (title != null && link != null && description != null) {
-//                    if(isItem) {
-//                        RssFeedModel item = new RssFeedModel(title, link, description);
-//                        items.add(item);
-//                    }
-//                    else {
-//                        mFeedTitle = title;
-//                        mFeedLink = link;
-//                        mFeedDescription = description;
-//                    }
-//
-//                    title = null;
-//                    link = null;
-//                    description = null;
-//                    isItem = false;
-//                }
+                event = xmlPullParser.next();
             }
-
-            return (String[]) currencies.toArray();
         } finally {
             inputStream.close();
-//            return (String[]) currencies.toArray();
+            return currencies.toArray(new String[currencies.size()]);
         }
     }
 

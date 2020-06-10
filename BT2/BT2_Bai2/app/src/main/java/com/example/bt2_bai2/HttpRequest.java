@@ -33,7 +33,6 @@ public class HttpRequest {
     public static final String TAG = "HttpRequestError";
     static private String response="nothing";
     static private final String url ="https://aud.fxexchangerate.com/rss.xml"; //https://www.fxexchangerate.com/currency-converter-rss-feed.html
-    static private List<RssFeedModel> mFeedModelList;
     static Context c;
     static String sendRequest(Context context, final MainActivity mainActivity){
         RequestQueue queue = Volley.newRequestQueue(context.getApplicationContext());
@@ -50,11 +49,13 @@ public class HttpRequest {
 //                        Toast.makeText(c.getApplicationContext(),res,Toast.LENGTH_LONG).show();
                         mainActivity.setContentView(R.layout.activity_main);
                         mainActivity.initSpinner();
-                        Document doc = convertStringToXMLDocument(response);
-                        Toast.makeText(c.getApplicationContext(),doc.getFirstChild().getNodeName(),Toast.LENGTH_LONG).show();
 
-//                        RssParser rssParser = new RssParser(url, mainActivity);
-//                        rssParser.execute((Void) null);
+//                        Document doc = convertStringToXMLDocument(response);
+//                        Toast.makeText(c.getApplicationContext(),doc.getFirstChild().getNodeName(),Toast.LENGTH_LONG).show();
+                        Toast.makeText(c.getApplicationContext(),"go parse",Toast.LENGTH_LONG).show();
+
+                        RssParser rssParser = new RssParser(url, mainActivity);
+                        rssParser.execute((Void) null);
 
                     }
                 }, new Response.ErrorListener() {
