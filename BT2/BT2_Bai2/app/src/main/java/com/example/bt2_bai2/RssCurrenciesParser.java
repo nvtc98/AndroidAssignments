@@ -22,7 +22,7 @@ public class RssCurrenciesParser extends RssParser {
         {
             Currency [] currencies = (Currency []) payload;
             String [] titles= new String[currencies.length];
-            for(int i=0;i<currencies.length;++i)
+            for(int i = 0; i < currencies.length; ++i)
             {
                 titles[i]=currencies[i].getTitle();
             }

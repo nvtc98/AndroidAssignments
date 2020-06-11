@@ -2,17 +2,16 @@ package com.example.nationinfo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -21,18 +20,19 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    ListView lvGeoname;
-    ArrayList<String> Geoname;
-    ArrayAdapter adapter;
-    GEONAME_LIST list;
+    private ListView lvGeoname;
+    private ArrayList<String> Geoname;
+    private ArrayAdapter adapter;
+    private GEONAME_LIST list;
+    private  String url = "http://api.geonames.org/" +
+            "countryInfoJSON?formatted=true&username=hauvu&style=full&" +
+            "fbclid=IwAR2of8PmJPpcOhvDQLTIwY2PQpRBn7NlVBoOPbKWVxrUJw4e0CMvlx8eHG4";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,32 +42,32 @@ public class MainActivity extends AppCompatActivity {
         this.Geoname = new ArrayList<>();
         this.list = new GEONAME_LIST();
         this.lvGeoname = (ListView) findViewById(R.id.lvGeoname);
-        new ReadJSON().execute("http://api.geonames.org/" +
-                "countryInfoJSON?formatted=true&username=hauvu&style=full&" +
-                "fbclid=IwAR2of8PmJPpcOhvDQLTIwY2PQpRBn7NlVBoOPbKWVxrUJw4e0CMvlx8eHG4");
 
-        try {
-            this.lvGeoname.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    String name = Geoname.get(position);
-                    for (int i = 0; i < list.getLength(); i++){
-                        if (name.equals(list.get(i).getCountryName())){
-                            Intent intent = new Intent(MainActivity.this, Information.class);
-                            intent.putExtra("geoname", list.get(i));
-                            startActivity(intent);
-                        }
-                    }
-                }
-            });
-        } catch (Exception e) {
-            Toast.makeText(this, "no internet", Toast.LENGTH_SHORT).show();
-        }
+        if (checkInternetConnection() == true ) {
+            this.runner();
+        } else Toast.makeText(this, "no internet", Toast.LENGTH_SHORT).show();
     }
 
 
-    private class ReadJSON extends AsyncTask<String, Void, String>
-    {
+    private void runner() {
+        new ReadJSON().execute(this.url);
+        this.lvGeoname.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String name = Geoname.get(position);
+                for (int i = 0; i < list.getLength(); i++) {
+                    if (name.equals(list.get(i).getCountryName())) {
+                        Intent intent = new Intent(MainActivity.this, Information.class);
+                        intent.putExtra("geoname", list.get(i));
+                        startActivity(intent);
+                    }
+                }
+            }
+        });
+    }
+
+
+    private class ReadJSON extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strings) {
             StringBuilder content = new StringBuilder();
@@ -129,10 +129,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public static boolean isConnectedInternet(Context context) {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    private boolean checkInternetConnection() {
+
+        ConnectivityManager connManager =
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
 
+        NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
 
-
+        if (networkInfo == null) return false;
+        if (!networkInfo.isConnected()) return false;
+        if (!networkInfo.isAvailable()) return false;
+        return true;
+    }
 }
-
-//Toast.makeText(this, "Không thể kết nối Internet", Toast.LENGTH_SHORT).show();
