@@ -27,25 +27,25 @@ public class Information extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_information);
 
-        this.anhxa();
+        this.mapComponent();
         Intent intent = getIntent();
-        GEONAME geoname = (GEONAME) intent.getSerializableExtra("geoname");
+        Geoname geoname = (Geoname) intent.getSerializableExtra("geoname");
         this.tvCountryName.setText(geoname.getCountryName());
         this.tvPopulation.setText(geoname.getPopulation());
         this.tvAreaInSqKm.setText(geoname.getAreaInSqKm() + "km²");
 
         String countryCode = geoname.getCountryCode().toLowerCase();
-        new LoadImageFromInternet().execute("https://img.geonames.org/flags/x/" + countryCode + ".gif");
+        new ImageLoader().execute("https://img.geonames.org/flags/x/" + countryCode + ".gif");
     }
 
-    private void anhxa(){
+    private void mapComponent(){
         this.tvCountryName = (TextView) findViewById(R.id.tvCountryName);
         this.tvPopulation = (TextView) findViewById(R.id.tvPopulation);
         this.tvAreaInSqKm = (TextView) findViewById(R.id.tvAreaInSqKm);
         this.imgFlag = (ImageView) findViewById(R.id.imgFlag);
     }
 
-    private class LoadImageFromInternet extends AsyncTask<String, Void, Bitmap>
+    private class ImageLoader extends AsyncTask<String, Void, Bitmap>
     {
         Bitmap bitmapImage = null;
         @Override
@@ -55,9 +55,9 @@ public class Information extends AppCompatActivity {
                 InputStream inputStream = url.openConnection().getInputStream();
                 bitmapImage = BitmapFactory.decodeStream(inputStream);
             } catch (MalformedURLException e) {
-                Toast.makeText(Information.this, "Error 01", Toast.LENGTH_SHORT).show();
+                return null;
             } catch (IOException e) {
-                Toast.makeText(Information.this, "Error 02", Toast.LENGTH_SHORT).show();
+                return null;
             }
 
             return bitmapImage;
@@ -66,6 +66,7 @@ public class Information extends AppCompatActivity {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
+            if(bitmap!=null)
             imgFlag.setImageBitmap(bitmap);
         }
     }

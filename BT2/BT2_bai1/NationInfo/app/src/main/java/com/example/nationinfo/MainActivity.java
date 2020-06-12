@@ -11,7 +11,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -29,28 +32,25 @@ public class MainActivity extends AppCompatActivity {
     private ListView lvGeoname;
     private ArrayList<String> Geoname;
     private ArrayAdapter adapter;
-    private GEONAME_LIST list;
-    private  String url = "http://api.geonames.org/" +
-            "countryInfoJSON?formatted=true&username=hauvu&style=full&" +
-            "fbclid=IwAR2of8PmJPpcOhvDQLTIwY2PQpRBn7NlVBoOPbKWVxrUJw4e0CMvlx8eHG4";
+    private GeonameList list;
+    private  String url = "http://api.geonames.org/countryInfoJSON?formatted=true&username=hauvu&style=full&fbclid=IwAR2of8PmJPpcOhvDQLTIwY2PQpRBn7NlVBoOPbKWVxrUJw4e0CMvlx8eHG4";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        this.Geoname = new ArrayList<>();
-        this.list = new GEONAME_LIST();
-        this.lvGeoname = (ListView) findViewById(R.id.lvGeoname);
+        initLoadingScreen();
 
         if (checkInternetConnection() == true ) {
-            this.runner();
-        } else Toast.makeText(this, "no internet", Toast.LENGTH_SHORT).show();
+            this.fetch();
+        } else Toast.makeText(this, "No internet connection.", Toast.LENGTH_SHORT).show();
     }
 
+    void initCountries(){
+        setContentView(R.layout.activity_main);
+        this.Geoname = new ArrayList<>();
+        this.list = new GeonameList();
+        this.lvGeoname = (ListView) findViewById(R.id.lvGeoname);
 
-    private void runner() {
-        new ReadJSON().execute(this.url);
         this.lvGeoname.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -67,39 +67,68 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private class ReadJSON extends AsyncTask<String, Void, String> {
+    void fetch() {
+        new JSONReader().execute(this.url);
+    }
+
+    void initLoadingScreen(){
+        setContentView(R.layout.activity_main_loading);
+        final Button button = findViewById(R.id.btn_retry);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                fetch();
+            }
+        });
+    }
+
+    void setLoadingFailed(){
+        TextView txtLoading = findViewById(R.id.txt_loading);
+        txtLoading.setText("Failed to connect.");
+
+        ProgressBar progressBar = findViewById(R.id.pb_loading);
+        progressBar.setVisibility(View.GONE);
+    }
+
+
+    private class JSONReader extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strings) {
             StringBuilder content = new StringBuilder();
+            BufferedReader bufferedReader = null;
             try {
                 URL url = new URL(strings[0]);
                 InputStreamReader inputStreamReader = new InputStreamReader(url.openConnection().getInputStream());
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                bufferedReader = new BufferedReader(inputStreamReader);
 
                 String line = "";
                 while ((line = bufferedReader.readLine()) != null) {
                     content.append(line);
                 }
-
                 bufferedReader.close();
-            } catch (MalformedURLException e) {
-                Toast.makeText(MainActivity.this, "Error 01", Toast.LENGTH_SHORT).show();
-            } catch (IOException e) {
-                Toast.makeText(MainActivity.this, "Error 02", Toast.LENGTH_SHORT).show();
-            }
 
+            } catch (MalformedURLException e) {
+                return "";
+            } catch (IOException e) {
+                return "";
+            }
             return content.toString();
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            if(s.length()==0)
+            {
+                setLoadingFailed();
+                return;
+            }
             try {
+                initCountries();
                 JSONObject object = new JSONObject(s);
                 JSONArray array = object.getJSONArray("geonames");
                 for (int i = 0; i < array.length(); i++) {
                     JSONObject item = array.getJSONObject(i);
-                    GEONAME geoname = new GEONAME(
+                    com.example.nationinfo.Geoname geoname = new Geoname(
                             item.getString("continent"),
                             item.getString("capital"),
                             item.getString("languages"),

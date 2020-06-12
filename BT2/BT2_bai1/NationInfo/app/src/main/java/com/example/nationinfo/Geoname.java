@@ -2,7 +2,7 @@ package com.example.nationinfo;
 
 import java.io.Serializable;
 
-public class GEONAME implements Serializable {
+public class Geoname implements Serializable {
     private String continent = "";
     private String capital = "";
     private String languages = "";
@@ -21,7 +21,7 @@ public class GEONAME implements Serializable {
     private String continentName = "";
     private String currencyCode = "";
 
-    public GEONAME(String continent, String capital, String languages, int geonameId, String south,
+    public Geoname(String continent, String capital, String languages, int geonameId, String south,
                    String isoAlpha3, String north, String fipsCode, String population, String east,
                    String isoNumeric, String areaInSqKm, String countryCode, String west,
                    String countryName, String continentName, String currencyCode) {
