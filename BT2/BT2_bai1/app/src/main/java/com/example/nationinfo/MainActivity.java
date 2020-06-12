@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> Geoname;
     private ArrayAdapter adapter;
     private GeonameList list;
-    private  String url = "http://api.geonames.org/countryInfoJSON?formatted=true&username=hauvu&style=full&fbclid=IwAR2of8PmJPpcOhvDQLTIwY2PQpRBn7NlVBoOPbKWVxrUJw4e0CMvlx8eHG4";
+    private String url = "http://api.geonames.org/countryInfoJSON?formatted=true&username=hauvu&style=full&fbclid=IwAR2of8PmJPpcOhvDQLTIwY2PQpRBn7NlVBoOPbKWVxrUJw4e0CMvlx8eHG4";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,23 +129,11 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < array.length(); i++) {
                     JSONObject item = array.getJSONObject(i);
                     com.example.nationinfo.Geoname geoname = new Geoname(
-                            item.getString("continent"),
-                            item.getString("capital"),
-                            item.getString("languages"),
                             item.getInt("geonameId"),
-                            item.getString("south"),
-                            item.getString("isoAlpha3"),
-                            item.getString("north"),
-                            item.getString("fipsCode"),
                             item.getString("population"),
-                            item.getString("east"),
-                            item.getString("isoNumeric"),
                             item.getString("areaInSqKm"),
                             item.getString("countryCode"),
-                            item.getString("west"),
-                            item.getString("countryName"),
-                            item.getString("continentName"),
-                            item.getString("currencyCode")
+                            item.getString("countryName")
                     );
                     list.addOneElement(geoname);
                     Geoname.add(geoname.getCountryName());
