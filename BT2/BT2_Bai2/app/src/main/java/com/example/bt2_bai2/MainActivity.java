@@ -2,6 +2,9 @@ package com.example.bt2_bai2;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -59,7 +62,10 @@ public class MainActivity extends AppCompatActivity {
         Button btnExchange = findViewById(R.id.btn_exchange);
         btnExchange.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                exchange();
+                if (checkInternetConnection() == true) {
+                    exchange();
+                }
+                else Toast.makeText(MainActivity.this, "No Internet", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -109,5 +115,17 @@ public class MainActivity extends AppCompatActivity {
         {
             Toast.makeText(this, "Cannot exchange. Make sure you you enter a valid input.", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private boolean checkInternetConnection() {
+
+        ConnectivityManager connManager =
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
+
+        if (networkInfo == null) return false;
+        if (!networkInfo.isConnected()) return false;
+        if (!networkInfo.isAvailable()) return false;
+        return true;
     }
 }
