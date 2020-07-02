@@ -2,9 +2,12 @@ package com.example.nationinfo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -35,7 +38,10 @@ public class Information extends AppCompatActivity {
         this.tvAreaInSqKm.setText(geoname.getAreaInSqKm() + "km²");
 
         String countryCode = geoname.getCountryCode().toLowerCase();
-        new ImageLoader().execute("https://img.geonames.org/flags/x/" + countryCode + ".gif");
+        if (checkInternetConnection() == true) {
+            new ImageLoader().execute("https://img.geonames.org/flags/x/" + countryCode + ".gif");
+        }
+        else Toast.makeText(this, "No Internet", Toast.LENGTH_SHORT).show();
     }
 
     private void mapComponent(){
@@ -69,5 +75,16 @@ public class Information extends AppCompatActivity {
             if(bitmap!=null)
             imgFlag.setImageBitmap(bitmap);
         }
+    }
+
+    private boolean checkInternetConnection() {
+
+        ConnectivityManager connManager =
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
+        if (networkInfo == null) return false;
+        if (!networkInfo.isConnected()) return false;
+        if (!networkInfo.isAvailable()) return false;
+        return true;
     }
 }
