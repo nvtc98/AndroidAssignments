@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 public class ActivityActions extends AppCompatActivity {
     Location location;
     String address;
-    String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,16 +20,17 @@ public class ActivityActions extends AppCompatActivity {
 
         location= LocationList.getActiveLocation();
 
-        name=location.getName();
-        address=location.getGeo();
+        address=location.getName();
         TextView title=findViewById(R.id.title);
-        title.setText(name);
+        title.setText(address);
 
         Button mapIt=findViewById(R.id.btn_mapit);
         mapIt.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent geoIntent = new Intent(Intent.ACTION_VIEW);
-                geoIntent.setData(Uri.parse(address));
+                address = address.replace(' ', '+');
+                Intent geoIntent = new Intent(
+                        android.content.Intent.ACTION_VIEW, Uri
+                        .parse("geo:0,0?q=" + address));
                 startActivity(geoIntent);
 
             };
