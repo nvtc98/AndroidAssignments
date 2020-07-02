@@ -2,6 +2,8 @@ package com.example.bai2;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,11 +58,14 @@ public class RowAdapter extends BaseAdapter {
         onClickOpenWebView=new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(v.getContext(), ActivityWebview.class);
-                String url=row.getUrl();
-                myIntent.putExtra("URL", url);
-                v.getContext().startActivity(myIntent);
+                if (checkInternetConnection() == true) {
+                    Intent myIntent = new Intent(v.getContext(), ActivityWebview.class);
+                    String url=row.getUrl();
+                    myIntent.putExtra("URL", url);
+                    v.getContext().startActivity(myIntent);
 //                Toast.makeText(null, "hello", Toast.LENGTH_LONG).show();
+                }
+                else Toast.makeText(context, "Không có kết nối internet", Toast.LENGTH_SHORT).show();
             }
         };
 
@@ -69,12 +74,27 @@ public class RowAdapter extends BaseAdapter {
         img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(v.getContext(), ActivityImage.class);
-                myIntent.putExtra("SRC", row.getImage());
-                v.getContext().startActivity(myIntent);
+                if (checkInternetConnection() == true) {
+                    Intent myIntent = new Intent(v.getContext(), ActivityImage.class);
+                    myIntent.putExtra("SRC", row.getImage());
+                    v.getContext().startActivity(myIntent);
+                }
+                else Toast.makeText(context, "Không có kết nối internet", Toast.LENGTH_SHORT).show();
             }
         });
 
         return convertView;
+    }
+
+    private boolean checkInternetConnection() {
+
+        ConnectivityManager connManager =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
+
+        if (networkInfo == null) return false;
+        if (!networkInfo.isConnected()) return false;
+        if (!networkInfo.isAvailable()) return false;
+        return true;
     }
 }
