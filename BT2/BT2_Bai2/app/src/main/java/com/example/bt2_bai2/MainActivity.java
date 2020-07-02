@@ -59,13 +59,15 @@ public class MainActivity extends AppCompatActivity {
 
     void setLoadingSuccess(){
         setContentView(R.layout.activity_main);
-        Button btnExchange = findViewById(R.id.btn_exchange);
+        final Button btnExchange = findViewById(R.id.btn_exchange);
         btnExchange.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                btnExchange.setText("Calculating...");
                 if (checkInternetConnection() == true) {
                     exchange();
                 }
                 else Toast.makeText(MainActivity.this, "No Internet", Toast.LENGTH_SHORT).show();
+                btnExchange.setText("EXCHANGE");
             }
         });
     }
