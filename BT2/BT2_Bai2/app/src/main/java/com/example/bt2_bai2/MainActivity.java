@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
                     exchange();
                 }
                 else Toast.makeText(MainActivity.this, "No Internet", Toast.LENGTH_SHORT).show();
-                btnExchange.setText("EXCHANGE");
             }
         });
     }
@@ -112,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
             BigDecimal input = new BigDecimal(et.getText().toString());
             txtResult.setText(exRate.toString());
             txtResult.setText(input.multiply(exRate) + " " + currencies[indexTo].getISO());
+            final Button btnExchange = findViewById(R.id.btn_exchange);
+            btnExchange.setText("Exchange");
         }
         catch (Exception e)
         {
